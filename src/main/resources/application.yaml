@@ -1,0 +1,25 @@
+server:
+  port: 9003
+  shutdown: graceful
+
+spring:
+  application:
+    name: Dispatcher service
+  lifecycle:
+    timeout-per-shutdown-phase: 15s
+  cloud:
+    function:
+      definition: pack|label
+    stream:
+      bindings:
+        packlabel-in-0:
+          destination: order-accepted # The actual name at the broker that the binder binds to (the exchange in RabbitMQ)
+          group: ${spring.application.name} # The consumer group interested in the destination (same as the application name)
+        packlabel-out-0:
+          destination: order-dispatched
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: user
+    password: password
+    connection-timeout: 5s
